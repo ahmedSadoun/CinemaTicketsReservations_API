@@ -207,13 +207,13 @@ def new_reservation(request):
         movie=request.data['movie']
     )
     #the guest is either registed or not in case it is not registed : 
-    check_if_the_guest_registerd=Guest.objects.get(
+    check_if_the_guest_registerd=Guest.objects.filter(
         name=request.data['name'],
         mobile=request.data['mobile']
         
     )
     guest=Guest()
-    if check_if_the_guest_registerd is None:#then create it 
+    if check_if_the_guest_registerd.count()<1:#then create it 
         
         guest.name=request.data['name']
         guest.mobile=request.data['mobile']
