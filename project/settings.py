@@ -38,8 +38,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'tickets'
 ]
+REST_FRAMEWORK = {
+  #  'DEFAULT_AUTHENTICATION_CLASSES':
+   # ['rest_framework.authentication.TokenAuthentication']
+    # 'DEFAULT_AUTHENTICATION_CLASSES':
+    # ['rest_framework.authentication.BasicAuthentication'],
+    # #after the user is authenticated what are the permissions of him , here i am telling him that he is authenticated 
+    # 'DEFAULT_PERMISSION_CLASSES':
+    # ['rest_framework.permissions.IsAuthenticated']
+}
+#AllowAny \\ IsAuthenticated \\ IsAdminuser \\ IsAuthenticatedReadOnly
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path,include
 from tickets import views
 from rest_framework.routers import DefaultRouter
+#obtain_auth_token is a view inside the restframwork that access the token model , because the token is saved in a model 
+from rest_framework.authtoken.views import obtain_auth_token
 router=DefaultRouter()
 #here is how to add the url of the view sets , first we register it in the default router , then we include it in the urlpaterns
 router.register('guests',views.viewsets_guest)
@@ -53,4 +55,14 @@ urlpatterns = [
      path('fbv/findmovie',views.find_movie),
      #8 create reservation 
      path('fbv/newReservation',views.new_reservation)
+    #9 rest authentication urls 
+    #this option gives the option to logout from the web consol
+    ,path('api-auth',include('rest_framework.urls')),
+    #10 Token Authentication
+    path('api-token-auth',obtain_auth_token),
+    #11 post pk generics Post_pk
+    path('post/generics/<int:pk>', views.Post_pk.as_view()),
+    #11 post pk generics Post_pk
+   # ,path('post/generics/',views.Post_pk.as_view())
+
 ]

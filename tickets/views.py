@@ -3,13 +3,19 @@ from unicodedata import name
 from django.http import JsonResponse 
 from rest_framework.response import Response
 from django.shortcuts import render
-from .models import Guest , Movei,Reservation
+from .models import Guest , Movei,Reservation , Post
 from rest_framework.decorators import api_view
-from .serializers import GuestSerializer , ReservationSerializers , MoveiSerializers
+from .serializers import GuestSerializer, PostSerializer , ReservationSerializers , MoveiSerializers
 from rest_framework import status , filters
 from rest_framework.views import APIView
 from django.http import Http404
 from rest_framework import generics , mixins , viewsets
+from rest_framework.authentication import BasicAuthentication , TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAuthorOrReadOnly
+#Authentication : who are you 
+#permission : what can you do ? 
+
 # Create your views here.
 #we have several ways to export the data as a json data 
 #1 without rest and no model query FBV : function based view 
@@ -164,14 +170,20 @@ class mixins_pk(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.Destroy
     def delete(self,request,pk):
         return self.destroy(request)
 
-#6.1 generics
+#6.1 generics 
+#we will add an authentication and permission to this endpoint not all the end points 
 class generics_list(generics.ListCreateAPIView):
     queryset=Guest.objects.all()
     serializer_class=GuestSerializer
+    authentication_classes=[TokenAuthentication]
+    # authentication_classes=[BasicAuthentication]
+    # permissions_classes=[IsAuthenticated]
+
 #6.2 generics get put delete
 class generics_pk(generics.RetrieveUpdateDestroyAPIView):
     queryset=Guest.objects.all()
     serializer_class=GuestSerializer
+    authentication_classes=[TokenAuthentication]
 #7 viewsets
 class viewsets_guest(viewsets.ModelViewSet):
     queryset=Guest.objects.all()
@@ -226,6 +238,14 @@ def new_reservation(request):
     reservation.save()
     serialized_reservation=ReservationSerializers(reservation)
     return Response(serialized_reservation.data,status=status.HTTP_201_CREATED)
+
+#10 post author editor
+class Post_pk(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes=[IsAuthorOrReadOnly]
+    queryset=Post.objects.all()
+    serializer_class=PostSerializer
+   
+    
 
     
          
